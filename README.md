@@ -2,5 +2,5 @@
 Aplikacija za praćenje filmskih preporuka i recenzija
 
 Autori:
-Ema Grubišić
+Ema Grubišić,
 Ester Radolović
