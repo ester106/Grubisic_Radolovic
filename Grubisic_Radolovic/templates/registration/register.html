@@ -1,0 +1,19 @@
+{% block title %}Registracija{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Registracija</h2>
+    
+    <form method="post" action="{% url 'main:register' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <button type="submit">Registriraj me</button>
+        </div>
+    </form>
+    
+    <div>
+        <p>Već imaš račun? <a href="{% url 'login' %}">Prijavi se</a></p>
+    </div>
+</div>
+{% endblock %}
