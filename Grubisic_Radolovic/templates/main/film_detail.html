@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ film.title }}</h2>
+<p><strong>Opis:</strong> {{ film.description }}</p>
+<p><strong>Godina:</strong> {{ film.release_year }}</p>
+<p><strong>Žanr:</strong> {{ film.get_genre_display }}</p>
+<p><strong>Redatelj:</strong> {{ film.director.name }}</p>
+<br><br>
+
+
+
+{% endblock %}
+

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Svi filmovi</h1>
+
+{% if user.is_authenticated %}
+    <div class="film-actions">
+        <a href="{% url 'main:film_add' %}">+ Dodaj film</a>
+    </div>
+{% endif %}
+
+<ul>
+    {% for film in films %}
+        <li>
+            <div>
+                <strong>{{ film.title }}</strong> ({{ film.release_year }})
+            </div>
+
+            <div style="margin-top:8px;">
+                <span>Žanr: {{ film.get_genre_display }}</span>
+                <br>
+                <span>
+                    Redatelj:
+                    {% if film.director %}
+                        {{ film.director.name }}
+                    {% else %}
+                        Nepoznato
+                    {% endif %}
+                </span>
+            </div>
+            {% if user.is_authenticated %}
+                <div style="margin-top:8px;">
+                    <a class="btn-small" href="{% url 'main:film_edit' film.pk %}">Uredi</a>
+                    <a class="btn-small" href="{% url 'main:film_delete' film.pk %}">Obriši</a>
+                </div>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>Nema filmova.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

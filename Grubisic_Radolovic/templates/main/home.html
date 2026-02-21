@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Filmovi</h1>
+
+<form method="get" class="search-bar" style="display:flex; flex-wrap:wrap;">
+
+    <input type="text" name="q" placeholder="Pretraži film..." value="{{ request.GET.q }}">
+
+    <select name="genre">
+        <option value="">Svi žanrovi</option>
+        {% for value, label in genres %}
+            <option value="{{ value }}" {% if request.GET.genre == value %}selected{% endif %}>
+                {{ label }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <select name="director">
+        <option value="">Svi redatelji</option>
+        {% for director in directors %}
+            <option value="{{ director.id }}" {% if request.GET.director == director.id|stringformat:"s" %}selected{% endif %}>
+                {{ director.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Filtriraj</button>
+</form>
+
+<ul>
+    {% for film in films %}
+        <li>
+            <a href="{% url 'main:film_detail' film.pk %}">
+                {{ film.title }} ({{ film.release_year }})
+            </a>
+        </li>
+    {% empty %}
+        <li>Nema filmova.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

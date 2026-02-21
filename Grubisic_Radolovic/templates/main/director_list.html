@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Svi redatelji</h1>
+
+{% if user.is_authenticated %}
+    <div class="director-actions">
+        <a href="{% url 'main:director_add' %}">+ Dodaj redatelja</a>
+    </div>
+{% endif %}
+
+<ul>
+    {% for director in directors %}
+        <li>
+            Ime i prezime: <strong>{{ director.name }}</strong><br>
+            {% if director.birth_year %}
+                Godina rođenja: {{ director.birth_year }}
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <div style="margin-top:8px;">
+                    <a class="btn-small" href="{% url 'main:director_edit' director.pk %}">Uredi</a>
+                    <a class="btn-small" href="{% url 'main:director_delete' director.pk %}">Obriši</a>
+                </div>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>Nema redatelja.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
