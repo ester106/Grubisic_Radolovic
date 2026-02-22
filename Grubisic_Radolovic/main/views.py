@@ -2,10 +2,11 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .forms import RegisterForm, FilmForm, DirectorForm
+from .forms import RegisterForm, FilmForm, DirectorForm, ReviewForm
 from django.contrib.auth import login
-from .models import Director, Film
+from .models import Director, Film, Review
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
@@ -48,7 +49,7 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["genres"] = Film.GENRE_CHOICES      # lista tupleova (value,label)
+        context["genres"] = Film.GENRE_CHOICES 
         context["directors"] = Director.objects.all()
         return context
     
@@ -129,3 +130,59 @@ class FilmDeleteView(LoginRequiredMixin, DeleteView):
         film = self.get_object()
         film.delete()
         return redirect(self.success_url)
+    
+# RECENZIJE
+
+# Dodavanje recenzije
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "main/review_form.html"
+
+    def form_valid(self, form):
+        film = get_object_or_404(Film, pk=self.kwargs["pk"])
+        form.instance.film = film
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("main:film_detail", kwargs={"pk": self.kwargs["pk"]})
+
+
+# Ažuriranje recenzije
+class ReviewUpdateView(LoginRequiredMixin, UpdateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "main/review_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        review = self.get_object()
+        if review.user != request.user:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+         return reverse_lazy("main:user_reviews")
+
+
+# Brisanje recenzije
+class ReviewDeleteView(LoginRequiredMixin, DeleteView):
+    model = Review
+
+    def dispatch(self, request, *args, **kwargs):
+        review = self.get_object()
+        if review.user != request.user:
+            raise PermissionDenied
+
+        review.delete()
+        return redirect("main:user_reviews")
+
+
+# Prikaz korisničkih recenzija
+class UserReviewsListView(LoginRequiredMixin, ListView):
+    model = Review
+    template_name = "main/user_reviews.html"
+    context_object_name = "reviews"
+
+    def get_queryset(self):
+        return Review.objects.filter(user=self.request.user)

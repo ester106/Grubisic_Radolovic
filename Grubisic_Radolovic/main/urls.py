@@ -22,4 +22,10 @@ urlpatterns = [
     path("director/add/", DirectorCreateView.as_view(), name="director_add"),
     path("director/<int:pk>/edit/", DirectorUpdateView.as_view(), name="director_edit"),
     path("director/<int:pk>/delete/", DirectorDeleteView.as_view(), name="director_delete"),
+    
+    # Recenzije
+        path("film/<int:pk>/review/add/", ReviewCreateView.as_view(), name="review_add"),
+    path("review/<int:pk>/edit/", ReviewUpdateView.as_view(), name="review_edit"),
+    path("review/<int:pk>/delete/", ReviewDeleteView.as_view(), name="review_delete"),
+    path("my-reviews/", UserReviewsListView.as_view(), name="user_reviews"),
 ]

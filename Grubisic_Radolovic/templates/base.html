@@ -17,6 +17,7 @@
         <a href="{% url 'main:film_list' %}">Filmovi</a>
         <a href="{% url 'main:director_list' %}">Redatelji</a>
         {% if user.is_authenticated %}
+            <a href="{% url 'main:user_reviews' %}">Moje recenzije</a>
             <a class="btn-logout" href="{% url 'logout' %}">Logout</a>
         {% else %}
             <a class="btn-secondary" href="{% url 'login' %}">Login</a>

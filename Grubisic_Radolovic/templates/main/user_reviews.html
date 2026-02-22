@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Moje recenzije</h1>
+<ul>
+    {% for review in reviews %}
+        <li>
+            <strong>{{ review.film.title }}</strong>: {{ review.rating }}/5
+            <p>{{ review.comment }}</p>
+            <a class="btn-small" href="{% url 'main:review_edit' review.pk %}">Uredi</a>
+            <a class="btn-small" href="{% url 'main:review_delete' review.pk %}">Obriši</a>
+        </li>
+    {% empty %}
+        <li>Nema recenzija.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
