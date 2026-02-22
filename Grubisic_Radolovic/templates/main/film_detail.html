@@ -9,7 +9,28 @@
 <p><strong>Redatelj:</strong> {{ film.director.name }}</p>
 <br><br>
 
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h3>Recenzije</h3>
+    {% if user.is_authenticated %}
+        <a class="btn-small" href="{% url 'main:review_add' film.pk %}">+ Dodaj recenziju</a>
+    {% endif %}
+</div>
 
+<ul>
+    {% for review in film.reviews.all %}
+        <li>
+            <div class="review-meta">
+                <strong>{{ review.user.username }}</strong>
+                | Ocjena: {{ review.rating }}/5
+                | {{ review.created_at|date:"d.m.Y H:i" }}
+            </div>
+
+            <p>{{ review.comment }}</p>
+        </li>
+    {% empty %}
+        <li>Nema recenzija.</li>
+    {% endfor %}
+</ul>
 
 {% endblock %}
 
