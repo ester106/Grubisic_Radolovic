@@ -18,7 +18,10 @@
         <a href="{% url 'main:director_list' %}">Redatelji</a>
         {% if user.is_authenticated %}
             <a href="{% url 'main:user_reviews' %}">Moje recenzije</a>
-            <a class="btn-logout" href="{% url 'logout' %}">Logout</a>
+            <form method="post" action="{% url 'logout' %}" style="background-color: #111827; display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">Logout</button>
+            </form>
         {% else %}
             <a class="btn-secondary" href="{% url 'login' %}">Login</a>
             <a class="btn-primary" href="{% url 'main:register' %}">Registracija</a>
